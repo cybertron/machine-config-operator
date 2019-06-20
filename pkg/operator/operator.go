@@ -402,6 +402,7 @@ func (optr *Operator) sync(key string) error {
 		templatectrl.SetupEtcdEnvKey:         imgs.SetupEtcdEnv,
 		templatectrl.InfraImageKey:           imgs.InfraImage,
 		templatectrl.KubeClientAgentImageKey: imgs.KubeClientAgent,
+		templatectrl.KeepalivedKey:           imgs.Keepalived,
 	}
 
 	// create renderConfig

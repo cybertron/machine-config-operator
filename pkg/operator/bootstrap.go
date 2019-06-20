@@ -104,6 +104,7 @@ func RenderBootstrap(
 		templatectrl.SetupEtcdEnvKey:         imgs.SetupEtcdEnv,
 		templatectrl.InfraImageKey:           imgs.InfraImage,
 		templatectrl.KubeClientAgentImageKey: imgs.KubeClientAgent,
+		templatectrl.KeepalivedKey:           imgs.Keepalived,
 	}
 
 	config := getRenderConfig("", string(filesData[kubeAPIServerServingCA]), spec, imgs, infra.Status.APIServerInternalURL)

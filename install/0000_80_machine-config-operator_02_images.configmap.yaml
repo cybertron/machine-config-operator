@@ -13,5 +13,6 @@ data:
       "etcd": "registry.svc.ci.openshift.org/openshift:etcd",
       "setupEtcdEnv": "registry.svc.ci.openshift.org/openshift:setup-etcd-environment",
       "infraImage": "registry.svc.ci.openshift.org/openshift:pod",
-      "kubeClientAgentImage": "registry.svc.ci.openshift.org/openshift:kube-client-agent"
+      "kubeClientAgentImage": "registry.svc.ci.openshift.org/openshift:kube-client-agent",
+      "keepalived": "registry.svc.ci.openshift.org/openshift:keepalived-ipfailover"
     }

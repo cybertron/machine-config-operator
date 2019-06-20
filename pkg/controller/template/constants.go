@@ -12,4 +12,7 @@ const (
 
 	// KubeClientAgentImageKey is the key that references the kube-client-agent image in the controller
 	KubeClientAgentImageKey string = "kubeClientAgentImage"
+
+	// KeepalivedKey is the key that references the keepalived image in the controller
+	KeepalivedKey string = "keepalivedImage"
 )

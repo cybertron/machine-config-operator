@@ -28,6 +28,7 @@ var (
 		imagesConfigMapFile  string
 		infraConfigFile      string
 		infraImage           string
+		keepalivedImage      string
 		kubeCAFile           string
 		kubeClientAgentImage string
 		mccImage             string
@@ -74,6 +75,7 @@ func init() {
 	bootstrapCmd.PersistentFlags().StringVar(&bootstrapOpts.infraConfigFile, "infra-config-file", "/assets/manifests/cluster-infrastructure-02-config.yml", "File containing infrastructure.config.openshift.io manifest.")
 	bootstrapCmd.PersistentFlags().StringVar(&bootstrapOpts.networkConfigFile, "network-config-file", "/assets/manifests/cluster-network-02-config.yml", "File containing network.config.openshift.io manifest.")
 	bootstrapCmd.PersistentFlags().StringVar(&bootstrapOpts.cloudConfigFile, "cloud-config-file", "", "File containing the config map that contains the cloud config for cloudprovider.")
+	bootstrapCmd.PersistentFlags().StringVar(&bootstrapOpts.keepalivedImage, "keepalived-image", "registry.svc.ci.openshift.org/openshift:keepalived-ipfailover", "Image for Keepalived.")
 }
 
 func runBootstrapCmd(cmd *cobra.Command, args []string) {
@@ -93,6 +95,7 @@ func runBootstrapCmd(cmd *cobra.Command, args []string) {
 		SetupEtcdEnv:            bootstrapOpts.setupEtcdEnvImage,
 		InfraImage:              bootstrapOpts.infraImage,
 		KubeClientAgent:         bootstrapOpts.kubeClientAgentImage,
+		Keepalived:              bootstrapOpts.keepalivedImage,
 	}
 
 	if err := operator.RenderBootstrap(

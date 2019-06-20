@@ -48,3 +48,7 @@ spec:
     from:
       kind: DockerImage
       name: quay.io/openshift/origin-cli:latest
+  - name: keepalived-ipfailover
+    from:
+      kind: DockerImage
+      name: registry.svc.ci.openshift.org/openshift:keepalived-ipfailover
