@@ -62,7 +62,7 @@
   name = "github.com/alecthomas/units"
   packages = ["."]
   pruneopts = "NUT"
-  revision = "2efee857e7cfd4f3d0138cc3cbb1b4966962b93a"
+  revision = "c3de453c63f4bdb4dadffab9805ec00426c505f7"
 
 [[projects]]
   digest = "1:1929b21a34400d463a99336f8e2908d2a154dc525c52411a8d99bb519942dc4c"
@@ -81,20 +81,12 @@
   version = "v1"
 
 [[projects]]
-  digest = "1:45c41cd27a8d986998680bfc86da0bbff5fa4f90d0f446c00636c8b099028ffe"
-  name = "github.com/blang/semver"
-  packages = ["."]
-  pruneopts = "NUT"
-  revision = "ba2c2ddd89069b46a7011d4106f6868f17ee1705"
-  version = "v3.6.1"
-
-[[projects]]
   branch = "master"
-  digest = "1:fdd135f63857b858859a5a2e361a117622824826a78ce9d8c058144a0f89c7ba"
+  digest = "1:a19cf5b4189d1935451e8e965f942791f23f7b435a4177df2bba38846529d808"
   name = "github.com/containerd/cgroups"
   packages = ["."]
   pruneopts = "NUT"
-  revision = "d596c78861b15c27a9ac82975aca4413390b9b49"
+  revision = "c4b9ac5c7601384c965b9646fc515884e091ebb9"
 
 [[projects]]
   digest = "1:613f0e16a97fc2dccc0d3c31b615eb3c8ecc57295b34949d47917ee1dde1476c"
@@ -431,7 +423,7 @@
 
 [[projects]]
   branch = "master"
-  digest = "1:3d9aff47bf9bdd8dade83f2dcf3aaffbecbb1d886a5b73b7c4cf604545f286dc"
+  digest = "1:e92977080ffd645c40ccbaff10d915ab89c4e6556e84e2d0900f4c40d331a744"
   name = "github.com/openshift/api"
   packages = [
     "config/v1",
@@ -439,7 +431,7 @@
     "operator/v1alpha1",
   ]
   pruneopts = "NUT"
-  revision = "35c8395fe70d56cb00077f4b89bcf1567af9a79c"
+  revision = "0390d1e77d6496df897e3a9d48b32d8827425320"
 
 [[projects]]
   branch = "master"
@@ -490,7 +482,7 @@
     "pkg/operator/v1helpers",
   ]
   pruneopts = "NUT"
-  revision = "f8abdcd57c468b7f49a91caa77212c12bd05fa9f"
+  revision = "83581c469d2eeb6dadfe86a4b6d8033b465ffd15"
 
 [[projects]]
   digest = "1:93b1d84c5fa6d1ea52f4114c37714cddd84d5b78f151b62bb101128dd51399bf"
@@ -652,7 +644,7 @@
 
 [[projects]]
   branch = "master"
-  digest = "1:59988b91533530837bdec96e34fefa9df629d8ee89f3603387c57763b9fed432"
+  digest = "1:2fc17e91d2a0f618e5e39cd8f9cc5d59a1abcb0949459a3e8655b5562972d843"
   name = "golang.org/x/tools"
   packages = [
     "go/ast/astutil",
@@ -669,7 +661,7 @@
     "internal/semver",
   ]
   pruneopts = "NUT"
-  revision = "9a621aea19f8341c01da59e0d42dd97700f677d0"
+  revision = "128ec6dfca091cc7d4fe6d18d97911f37c95a590"
 
 [[projects]]
   digest = "1:372cd8eba449f9b6db06677d0e73fa193ec5b19aaee148f355503ab6127045ca"
@@ -693,7 +685,7 @@
   name = "google.golang.org/genproto"
   packages = ["googleapis/rpc/status"]
   pruneopts = "NUT"
-  revision = "3bdd9d9f5532d75d09efb230bd767d265245cfe5"
+  revision = "c506a9f9061087022822e8da603a52fc387115a8"
 
 [[projects]]
   digest = "1:2faab8e13984b728cde9ced456912a0fc5cd43da5b9a4b45b749dc3ae63f27b2"
@@ -1176,7 +1168,7 @@
     "trace",
   ]
   pruneopts = "NUT"
-  revision = "fac88abaa1020f13782606257be375d74483369d"
+  revision = "3dccf664f023863740c508fb4284e49742bedfa4"
 
 [[projects]]
   digest = "1:8730e0150dfb2b7e173890c8b9868e7a273082ef8e39f4940e3506a481cf895c"
@@ -1194,7 +1186,6 @@
     "github.com/Masterminds/sprig",
     "github.com/apparentlymart/go-cidr/cidr",
     "github.com/ashcrow/osrelease",
-    "github.com/blang/semver",
     "github.com/containers/image/docker/reference",
     "github.com/containers/image/pkg/sysregistriesv2",
     "github.com/containers/image/types",
