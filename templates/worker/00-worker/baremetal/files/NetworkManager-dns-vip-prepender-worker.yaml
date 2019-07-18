@@ -1,0 +1,45 @@
+filesystem: "root"
+mode: 0755
+path: "/etc/NetworkManager/dispatcher.d/pre-up.d/dns-vip-prepender-worker"
+contents:
+  inline: |
+    #!/bin/bash
+    
+    IFACE=$1
+    STATUS=$2
+    
+    case "$STATUS" in
+        pre-up)
+        logger -s "NM dns-vip-prepender-worker triggered by pre-upping ${1}."
+        DNS_VIP="127.0.0.1"
+        set +e
+        if [[ -n $DNS_VIP ]]; then
+            logger -s "NM dns-vip-prepender-worker: Checking if DNS VIP is the first entry in resolv.conf"
+            if grep nameserver /etc/resolv.conf | head -n 1 | grep -q "$DNS_VIP" ; then
+                logger -s "NM dns-vip-prepender-worker: DNS VIP already the first entry in resolv.conf"
+                exit 0
+            else
+                export DNS_VIP
+
+                logger -s "NM dns-vip-prepender-worker: Looking for 'search {{ .EtcdDiscoveryDomain }}' in /etc/resolv.conf to place 'nameserver $DNS_VIP'"
+                sed -i "/^search .*$/a nameserver $DNS_VIP" /etc/resolv.conf
+                logger -s -f /etc/resolv.conf
+                if ! grep -q $DNS_VIP /etc/resolv.conf; then
+                    logger -s "NM dns-vip-prepender-worker: Failed to add DNS VIP to resolv.conf"
+                    exit 1
+                fi
+            fi
+        fi
+        ;;
+        down)
+        logger -s "NM dns-vip-prepender-worker triggered by downing $IFACE"
+        ;;
+        up)
+        logger -s "NM dns-vip-prepender-worker triggered by upping $IFACE"
+        ;;
+        post-down)
+        logger -s "NM dns-vip-prepender-worker triggered by post-downing $IFACE"
+        ;;
+        *)
+        ;;
+    esac

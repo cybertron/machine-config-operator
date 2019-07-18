@@ -1,0 +1,41 @@
+filesystem: "root"
+mode: 0755
+path: "/etc/NetworkManager/dispatcher.d/pre-up.d/dns-vip-prepender"
+contents:
+  inline: |
+    #!/bin/bash
+    
+    IFACE=$1
+    STATUS=$2
+    
+    case "$STATUS" in
+        pre-up)
+        logger -s "NM dns-vip-prepender triggered by pre-upping ${1}."
+        DNS_VIP="{{ .Infra.Status.PlatformStatus.BareMetal.NodeDNSIP }}"
+        set +e
+        if [[ -n $DNS_VIP ]]; then
+            logger -s "NM dns-vip-prepender: Checking if DNS VIP is the first entry in resolv.conf"
+            if grep nameserver /etc/resolv.conf | head -n 1 | grep -q "$DNS_VIP" ; then
+                logger -s "NM dns-vip-prepender: DNS VIP already the first entry in resolv.conf"
+                exit 0
+            else
+                export DNS_VIP
+    
+                logger -s "NM dns-vip-prepender: Looking for 'search {{ .EtcdDiscoveryDomain }}' in /etc/resolv.conf to place 'nameserver $DNS_VIP'"
+                sed -i "/^search .*$/a nameserver $DNS_VIP" /etc/resolv.conf
+            fi
+        fi
+        ;;
+        down)
+        logger -s "NM dns-vip-prepender triggered by downing $IFACE"
+        ;;
+        up)
+        logger -s "NM dns-vip-prepender triggered by upping $IFACE"
+        ;;
+        post-down)
+        logger -s "NM dns-vip-prepender triggered by post-downing $IFACE"
+        ;;
+        *)
+        ;;
+    esac
+    
