@@ -149,6 +149,18 @@ func RenderBootstrap(
 	}, {
 		name:     "manifests/machineconfigserver/kube-apiserver-serving-ca-configmap.yaml",
 		filename: "manifests/kube-apiserver-serving-ca-configmap.yaml",
+	}, {
+		name:     "manifests/baremetal/coredns.yaml",
+		filename: "manifests/coredns.yaml",
+	}, {
+		name:     "manifests/baremetal/coredns-corefile.tmpl",
+		filename: "static-pod-resources/coredns/Corefile.tmpl",
+	}, {
+		name:     "manifests/baremetal/keepalived.yaml",
+		filename: "manifests/keepalived.yaml",
+	}, {
+		name:     "manifests/baremetal/keepalived.conf.tmpl",
+		filename: "static-pod-resources/keepalived/keepalived.conf.tmpl",
 	}}
 	for _, m := range manifests {
 		var b []byte
