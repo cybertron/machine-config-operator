@@ -6,12 +6,14 @@ contents:
     . {
         errors
         health :18080
-        mdns {{ .EtcdDiscoveryDomain }} 0 {{`{{.Cluster.Name}}`}}
         forward . {{`{{- range $upstream := .DNSUpstreams}} {{$upstream}}{{- end}}`}}
         cache 30
         reload
+{{ if eq .Infra.Status.PlatformStatus.BareMetal.UseMDNS "all" }}
+        mdns {{ .EtcdDiscoveryDomain }} 0 {{`{{.Cluster.Name}}`}}
         hosts {
             {{ .Infra.Status.PlatformStatus.BareMetal.APIServerInternalIP }} api-int.{{ .EtcdDiscoveryDomain }}
             fallthrough
         }
+{{ end }}
     }

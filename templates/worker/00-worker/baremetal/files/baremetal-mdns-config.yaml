@@ -1,6 +1,7 @@
 filesystem: "root"
 mode: 0644
 path: "/etc/kubernetes/static-pod-resources/mdns/config.hcl.tmpl"
+{{ if ne .Infra.Status.PlatformStatus.BareMetal.UseMDNS "none" }}
 contents:
   inline: |
     bind_address = "{{`{{ .NonVirtualIP }}`}}"
@@ -14,3 +15,4 @@ contents:
         port = 42424
         ttl = 3200
     }
+{{ end }}
