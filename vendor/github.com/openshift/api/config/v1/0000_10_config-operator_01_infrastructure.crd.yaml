@@ -137,6 +137,12 @@ spec:
                         a DNS service is hosted as a static pod to serve those hostnames
                         to the nodes in the cluster.
                       type: string
+                    useMDNS:
+                      description: UseMDNS indicates where baremetal mDNS services
+                        should be deployed. See the documentation of the corresponding
+                        install-config member at https://github.com/openshift/installer/blob/master/pkg/types/baremetal/platform.go
+                        for details on which values are recognized.
+                      type: string
                 gcp:
                   description: GCP contains settings specific to the Google Cloud
                     Platform infrastructure provider.
