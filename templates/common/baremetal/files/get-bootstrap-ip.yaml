@@ -1,0 +1,16 @@
+filesystem: "root"
+mode: 0755
+path: "/usr/local/bin/get-bootstrap-ip"
+contents:
+  inline: |
+    #!/bin/bash
+
+    set -ex -o pipefail
+
+    while :
+    do
+        id=$(crictl ps | grep etcdctl | awk '{print $1}') || continue
+        ip=$(crictl exec $id etcdctl member list | grep bootstrap | awk '{print $4}' | sed 's|https://\[\(.*\)\]:2380,|\1|') || continue
+        echo $ip > /tmp/bootstrap-ip
+        break
+    done

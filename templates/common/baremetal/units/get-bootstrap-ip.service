@@ -1,0 +1,15 @@
+name: "get-bootstrap-ip.service"
+enabled: true
+contents: |
+  [Unit]
+  Description=Write IP address of bootstrap node to host using etcdctl
+  Wants=crio.service
+  After=crio.service
+
+  [Service]
+  Type=oneshot
+  ExecStart=/usr/local/bin/get-bootstrap-ip
+
+  [Install]
+  WantedBy=multi-user.target
+
