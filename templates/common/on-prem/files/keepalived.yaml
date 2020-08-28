@@ -75,17 +75,47 @@ contents:
             if pid=$(pgrep -o keepalived); then
                 kill -s SIGHUP "$pid"
             else
-                /usr/sbin/keepalived -f /etc/keepalived/keepalived.conf --dont-fork --vrrp --log-detail --log-console &
+                start_keepalived
             fi
+          }
+
+          stop_keepalived()
+          {
+            if pid=$(pgrep -o keepalived); then
+              kill -s SIGTERM "$pid"
+              # The monitor runs every 10 seconds
+              sleep 9
+              if pid=$(pgrep -o keepalived); then
+                kill -s SIGKILL "$pid"
+              fi
+              touch /var/run/keepalived/stopped
+            fi
+          }
+
+          start_keepalived()
+          {
+            if ! pgrep -o keepalived > /dev/null; then
+              /usr/sbin/keepalived -f /etc/keepalived/keepalived.conf --dont-fork --vrrp --log-detail --log-console &
+            fi
+            rm -f /var/run/keepalived/stopped
           }
 
           msg_handler()
           {
             while read -r line; do
+              # These get sent a lot, don't spam the logs with them
+              if [ "$line" = stop ]; then
+                  stop_keepalived
+                  continue
+              elif [ "$line" = start ]; then
+                  start_keepalived
+                  continue
+              fi
               echo "The client sent: $line" >&2
-              # currently only 'reload' msg is supported
               if [ "$line" = reload ]; then
                   reload_keepalived
+              else
+                  echo "Unrecognized command: $line" >&2
               fi
             done
           }
@@ -94,8 +124,10 @@ contents:
           declare -r keepalived_sock="/var/run/keepalived/keepalived.sock"
           export -f msg_handler
           export -f reload_keepalived
-          if [ -s "/etc/keepalived/keepalived.conf" ]; then
-              /usr/sbin/keepalived -f /etc/keepalived/keepalived.conf --dont-fork --vrrp --log-detail --log-console &
+          export -f stop_keepalived
+          export -f start_keepalived
+          if [ -s "/etc/keepalived/keepalived.conf" -a ! -e /var/run/keepalived/stopped ]; then
+            start_keepalived
           fi
 
           rm -f "$keepalived_sock"
@@ -115,7 +147,7 @@ contents:
             - /bin/bash
             - -c
             - |
-              echo "State = FAULT" > /tmp/keepalived.data && kill -s SIGUSR1 "$(pgrep -o keepalived)" && for i in $(seq 5); do grep -q "State = FAULT" /tmp/keepalived.data && sleep 1 || exit 0; done && exit 1
+              [ -e /var/run/keepalived/stopped ] || echo "State = FAULT" > /tmp/keepalived.data && kill -s SIGUSR1 "$(pgrep -o keepalived)" && for i in $(seq 5); do grep -q "State = FAULT" /tmp/keepalived.data && sleep 1 || exit 0; done && exit 1
           initialDelaySeconds: 20
         terminationMessagePolicy: FallbackToLogsOnError
         imagePullPolicy: IfNotPresent
