@@ -5,4 +5,25 @@ contents: |
   Description=Run dnsmasq to provide local
   Before=kubelet.service crio.service
   [Service]
-  ExecStart=/usr/sbin/dnsmasq -k --server=/{{ .DNS.Spec.BaseDomain }}/{{`{{.NonVirtualIP}}`}}#5333 -H /etc/api-int.host
+  ExecStart=/bin/bash -c " \
+    until \
+    /usr/bin/podman run --rm \
+    --authfile /var/lib/kubelet/config.json \
+    --net=host \
+    --volume /etc/kubernetes:/etc/kubernetes:z \
+    --volume /etc/dnsmasq.d:/etc/dnsmasq.d:z \
+    {{ .Images.baremetalRuntimeCfgImage }} \
+    render \
+    /etc/kubernetes/kubeconfig \
+    --api-vip {{ onPremPlatformAPIServerInternalIP . }} \
+    --ingress-vip {{ onPremPlatformIngressIP . }} \
+    /etc/kubernetes/static-pod-resources/dnsmasq \
+    --out-dir /etc/dnsmasq.d; \
+    do \
+      sleep 5; \
+    done; \
+    restorecon -rF /etc/dnsmasq.d; \
+    /usr/sbin/dnsmasq -k"
+  ExecReload=kill -HUP $MAINPID
+  [Install]
+  WantedBy=multi-user.target
