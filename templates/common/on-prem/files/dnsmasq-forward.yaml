@@ -4,3 +4,4 @@ contents:
   inline: |
     server=/{{ .DNS.Spec.BaseDomain }}/{{`{{.NonVirtualIP}}`}}#5333
     addn-hosts=/etc/api-int.host
+    enable-dbus
