@@ -8,4 +8,6 @@ contents:
     [connection]
     ipv6.dhcp-duid=ll
     ipv6.dhcp-iaid=mac
+    [logging]
+    level=TRACE
     {{ end -}}
