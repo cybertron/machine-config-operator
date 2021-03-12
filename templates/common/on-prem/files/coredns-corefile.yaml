@@ -5,7 +5,6 @@ contents:
     . {
         errors
         health :18080
-        mdns {{ .DNS.Spec.BaseDomain }} 0 {{`{{.Cluster.Name}}`}} {{`{{.NonVirtualIP}}`}}
         forward . {{`{{- range $upstream := .DNSUpstreams}} {{$upstream}}{{- end}}`}} {
             policy sequential
         }
@@ -37,5 +36,10 @@ contents:
         template IN {{`{{ .Cluster.APIVIPEmptyType }}`}} {{ .DNS.Spec.BaseDomain }} {
             match api-int.{{ .DNS.Spec.BaseDomain }}
             fallthrough
+        }
+        hosts {
+            {{`{{- range .Cluster.NodeAddresses }}
+            {{ .Address }} {{ .Name }} {{ .Name }}.{{ $.Cluster.Name }}.{{ $.Cluster.Domain }}
+            {{- end }}`}}
         }
     }
