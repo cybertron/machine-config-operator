@@ -78,4 +78,20 @@ contents:
         *)
         ;;
     esac
+
+    set -x
+    case "$2" in
+        up)
+        >&2 echo "NM connection copier triggered by ${1} ${2}."
+        nic=$1
+        mac="$(ip -j addr show $nic | jq -r ".[].address")"
+        echo $nic
+        echo $mac
+        filename=${nic}-${mac}.nmconnection
+        if [ -f /etc/NetworkManager/all-connections/${filename} -a ! -f /etc/NetworkManager/system-connections/${filename} ]
+        then
+            cp /etc/NetworkManager/all-connections/${filename} /etc/NetworkManager/system-connections
+            nmcli con reload
+        fi
+    esac
     {{ end -}}
