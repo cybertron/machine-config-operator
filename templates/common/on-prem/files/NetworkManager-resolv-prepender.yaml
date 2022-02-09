@@ -4,7 +4,7 @@ contents:
   inline: |
     {{ if (onPremPlatformAPIServerInternalIP .) -}}
     #!/bin/bash
-    set -eo pipefail
+    set -exo pipefail
     IFACE=$1
     STATUS=$2
 
@@ -22,6 +22,7 @@ contents:
 
     # If $DHCP6_FQDN_FQDN is not empty and is not localhost.localdomain
     [[ -n "$DHCP6_FQDN_FQDN" && "$DHCP6_FQDN_FQDN" != "localhost.localdomain" && "$DHCP6_FQDN_FQDN" =~ "." ]] && hostnamectl set-hostname --static --transient $DHCP6_FQDN_FQDN
+
     case "$STATUS" in
         up|dhcp4-change|dhcp6-change)
         >&2 echo "NM resolv-prepender triggered by ${1} ${2}."
@@ -39,6 +40,26 @@ contents:
         # Ensure resolv.conf exists and contains nameservers before we try to run podman
         if [[ ! -e /etc/resolv.conf ]] || ! grep -q nameserver /etc/resolv.conf; then
             cp /var/run/NetworkManager/resolv.conf /etc/resolv.conf
+        fi
+
+        # Node ip show
+        NODE_IP=$(podman run --rm \
+          --authfile /var/lib/kubelet/config.json \
+          --net=host \
+          --volume /etc/systemd/system:/etc/systemd/system:z \
+          {{ .Images.baremetalRuntimeCfgImage }} \
+          node-ip \
+          show \
+          {{ onPremPlatformAPIServerInternalIP . }} || :)
+        if [ -n "$NODE_IP" ]; then
+          # Dig node ip
+          RDNS_HOSTNAME=$(dig -x $NODE_IP +short | head -n 1 || echo "")
+          if [ -n "$RDNS_HOSTNAME" ]; then
+            # Strip the trailing .
+            RDNS_HOSTNAME=${RDNS_HOSTNAME%.}
+            # If hostname doesn't match, set hostname
+            [[ "$(< /proc/sys/kernel/hostname)" != "$RDNS_HOSTNAME" ]] && hostnamectl set-hostname --static --transient "$RDNS_HOSTNAME"
+          fi
         fi
 
 
