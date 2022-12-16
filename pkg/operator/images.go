@@ -37,4 +37,5 @@ type ControllerConfigImages struct {
 	Coredns             string `json:"corednsImage"`
 	Haproxy             string `json:"haproxyImage"`
 	BaremetalRuntimeCfg string `json:"baremetalRuntimeCfgImage"`
+	NMState             string `json:"nmstateImage"`
 }

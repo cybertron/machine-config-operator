@@ -151,6 +151,7 @@ func RenderBootstrap(
 		templatectrl.CorednsKey:             imgs.Coredns,
 		templatectrl.HaproxyKey:             imgs.Haproxy,
 		templatectrl.BaremetalRuntimeCfgKey: imgs.BaremetalRuntimeCfg,
+		templatectrl.NMStateKey:             imgs.NMState,
 	}
 
 	config := getRenderConfig("", string(filesData[kubeAPIServerServingCA]), spec, &imgs.RenderConfigImages, infra.Status.APIServerInternalURL, nil)

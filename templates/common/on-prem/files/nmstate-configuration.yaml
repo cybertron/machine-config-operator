@@ -1,0 +1,21 @@
+mode: 0755
+path: "/usr/local/bin/nmstate-configuration.sh"
+contents:
+  inline: |
+    #!/bin/bash
+    set -eux
+    
+    hostname=$(hostname -s)
+    if [ ! -s /etc/nmstate/${hostname}.yaml -o -e /etc/nmstate/applied ]; then
+      # Nothing to do
+      exit 0
+    fi
+
+    nmstate_wrapper="/usr/bin/podman run --rm --authfile /var/lib/kubelet/config.json --net=host --privileged --security-opt label=disable --volume /etc/nmstate:/etc/nmstate --volume /run/dbus/system_bus_socket:/run/dbus/system_bus_socket --volume /run/openvswitch/db.sock:/run/openvswitch/db.sock {{ .Images.nmstateImage }}"
+
+    until $nmstate_wrapper /bin/nmstatectl apply /etc/nmstate/${hostname}.yaml
+    do
+      echo "Failed to apply NMState configuration. Retrying in 60 seconds."
+      sleep 60;
+    done
+    touch /etc/nmstate/applied

@@ -331,6 +331,7 @@ func (optr *Operator) syncRenderConfig(_ *renderConfig) error {
 		templatectrl.CorednsKey:             imgs.Coredns,
 		templatectrl.HaproxyKey:             imgs.Haproxy,
 		templatectrl.BaremetalRuntimeCfgKey: imgs.BaremetalRuntimeCfg,
+		templatectrl.NMStateKey:             imgs.NMState,
 	}
 
 	ignitionHost, err := getIgnitionHost(&infra.Status)

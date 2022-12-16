@@ -21,4 +21,7 @@ const (
 
 	// BaremetalRuntimeCfgKey is the key that references the baremetal-runtimecfg image in the controller
 	BaremetalRuntimeCfgKey string = "baremetalRuntimeCfgImage"
+
+	// NMStateKey is the key that references the NMState image in the controller
+	NMStateKey string = "nmstateImage"
 )

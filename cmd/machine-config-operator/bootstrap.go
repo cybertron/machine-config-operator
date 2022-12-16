@@ -37,6 +37,7 @@ var (
 		keepalivedImage                string
 		kubeCAFile                     string
 		mcoImage                       string
+		nmstateImage                   string
 		oauthProxyImage                string
 		networkConfigFile              string
 		oscontentImage                 string
@@ -78,6 +79,7 @@ func init() {
 	bootstrapCmd.PersistentFlags().StringVar(&bootstrapOpts.corednsImage, "coredns-image", "", "Image for CoreDNS.")
 	bootstrapCmd.PersistentFlags().StringVar(&bootstrapOpts.haproxyImage, "haproxy-image", "", "Image for haproxy.")
 	bootstrapCmd.PersistentFlags().StringVar(&bootstrapOpts.baremetalRuntimeCfgImage, "baremetal-runtimecfg-image", "", "Image for baremetal-runtimecfg.")
+	bootstrapCmd.PersistentFlags().StringVar(&bootstrapOpts.nmstateImage, "nmstate-image", "", "Image for NMState.")
 	bootstrapCmd.PersistentFlags().StringVar(&bootstrapOpts.oauthProxyImage, "oauth-proxy-image", "", "Image for origin oauth proxy.")
 	bootstrapCmd.PersistentFlags().StringVar(&bootstrapOpts.baseOSContainerImage, "baseos-image", "", "Image for rhel-coreos-8")
 	bootstrapCmd.PersistentFlags().StringVar(&bootstrapOpts.baseOSExtensionsContainerImage, "baseos-extensions-image", "", "Image for rhel-coreos-8-extensions")
@@ -134,6 +136,7 @@ func runBootstrapCmd(cmd *cobra.Command, args []string) {
 		bootstrapOpts.keepalivedImage = findImageOrDie(imgstream, "keepalived-ipfailover")
 		bootstrapOpts.corednsImage = findImageOrDie(imgstream, "coredns")
 		bootstrapOpts.baremetalRuntimeCfgImage = findImageOrDie(imgstream, "baremetal-runtimecfg")
+		bootstrapOpts.nmstateImage = findImageOrDie(imgstream, "machine-image-customization-controller")
 		// TODO: Hmm, this one doesn't actually seem to be passed right now at bootstrap time by the installer
 		bootstrapOpts.oauthProxyImage = findImageOrDie(imgstream, "oauth-proxy")
 		bootstrapOpts.infraImage = findImageOrDie(imgstream, "pod")
@@ -165,6 +168,7 @@ func runBootstrapCmd(cmd *cobra.Command, args []string) {
 			Coredns:             bootstrapOpts.corednsImage,
 			Haproxy:             bootstrapOpts.haproxyImage,
 			BaremetalRuntimeCfg: bootstrapOpts.baremetalRuntimeCfgImage,
+			NMState:             bootstrapOpts.nmstateImage,
 		},
 	}
 
