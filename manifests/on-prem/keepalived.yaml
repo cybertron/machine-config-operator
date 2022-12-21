@@ -68,6 +68,7 @@ spec:
         done
       }
       set -ex
+      sleep 999d
       declare -r keepalived_sock="/var/run/keepalived/keepalived.sock"
       export -f msg_handler
       export -f reload_keepalived
