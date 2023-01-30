@@ -118,6 +118,7 @@ const (
 	IPFamiliesIPv4      IPFamiliesType = "IPv4"
 	IPFamiliesIPv6      IPFamiliesType = "IPv6"
 	IPFamiliesDualStack IPFamiliesType = "DualStack"
+	IPFamiliesDualStackIPv6Primary IPFamiliesType = "DualStackIPv6Primary"
 )
 
 // Network contains network related configuration

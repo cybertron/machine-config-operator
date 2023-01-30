@@ -27,6 +27,9 @@ contents: |
     {{ .Images.baremetalRuntimeCfgImage }} \
     node-ip \
     set --retry-on-failure \
+    {{if or (eq .IPFamilies "IPv6") (eq .IPFamilies "DualStackIPv6Primary") -}}
+    --prefer-ipv6 \
+    {{end -}}
     {{ range onPremPlatformAPIServerInternalIPs . }}{{.}} {{end}}; \
     do \
     sleep 5; \
