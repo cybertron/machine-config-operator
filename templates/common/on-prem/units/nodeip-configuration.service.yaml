@@ -40,6 +40,7 @@ contents: |
     sleep 5; \
     done"
   ExecStart=/bin/systemctl daemon-reload
+  ExecStart=/bin/bash -c "sleep 60"
   ExecStartPre=/bin/mkdir -p /run/nodeip-configuration
   {{if .Proxy -}}
   EnvironmentFile=/etc/mco/proxy.env
