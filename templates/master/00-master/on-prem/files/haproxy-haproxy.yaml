@@ -21,6 +21,9 @@ contents:
     frontend  main
       bind :::{{`{{ .LBConfig.LbPort }}`}} v4v6
       default_backend masters
+    frontend mcs
+      bind :::9443 v4v6
+      default_backend mcs
     listen health_check_http_url
       bind :::9444 v4v6
       mode http
@@ -41,4 +44,10 @@ contents:
        balance roundrobin
     {{`{{- range .LBConfig.Backends }}
        server {{ .Host }} {{ .Address }}:{{ .Port }} weight 1 verify none check check-ssl inter 1s fall 2 rise 3
+    {{- end }}`}}
+    backend mcs
+      option httpchk GET /healthz HTTP/1.0
+      balance roundrobin
+    {{`{{- range .LBConfig.Backends }}
+       server {{ .Host }} {{ .Address }}:22623 weight 1 verify none check inter 10s fall 2 rise 3
     {{- end }}`}}
