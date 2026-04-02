@@ -102,11 +102,11 @@ type InfrastructureStatus struct {
 	// and the operators should not configure the operand for highly-available operation
 	// The 'External' mode indicates that the control plane is hosted externally to the cluster and that
 	// its components are not visible within the cluster.
+	// The 'HighlyAvailableArbiter' mode indicates that the control plane will consist of 2 control-plane nodes
+	// that run conventional services and 1 smaller sized arbiter node that runs a bare minimum of services to maintain quorum.
 	// +kubebuilder:default=HighlyAvailable
-	// +openshift:validation:FeatureGateAwareEnum:featureGate="",enum=HighlyAvailable;SingleReplica;External
-	// +openshift:validation:FeatureGateAwareEnum:featureGate=HighlyAvailableArbiter,enum=HighlyAvailable;HighlyAvailableArbiter;SingleReplica;External
-	// +openshift:validation:FeatureGateAwareEnum:featureGate=DualReplica,enum=HighlyAvailable;SingleReplica;DualReplica;External
-	// +openshift:validation:FeatureGateAwareEnum:requiredFeatureGate=HighlyAvailableArbiter;DualReplica,enum=HighlyAvailable;HighlyAvailableArbiter;SingleReplica;DualReplica;External
+	// +openshift:validation:FeatureGateAwareEnum:featureGate="",enum=HighlyAvailable;HighlyAvailableArbiter;SingleReplica;External
+	// +openshift:validation:FeatureGateAwareEnum:featureGate=DualReplica,enum=HighlyAvailable;HighlyAvailableArbiter;SingleReplica;DualReplica;External
 	// +optional
 	ControlPlaneTopology TopologyMode `json:"controlPlaneTopology"`
 
@@ -121,6 +121,16 @@ type InfrastructureStatus struct {
 	// +kubebuilder:validation:Enum=HighlyAvailable;SingleReplica
 	// +optional
 	InfrastructureTopology TopologyMode `json:"infrastructureTopology,omitempty"`
+
+	// bridgeTopology specifies how the br-ex bridge for OVNKubernetes will be created by NMState.
+	// The default is 'Disabled' which means br-ex will be managed by configure-ovs.sh instead of NMState
+	// 'Default' will create a standard br-ex, similar to what would be done by configure-ovs.sh.
+	// 'BalanceSLB' will create a br-ex configured to use the SLB mode in OpenVSwitch bonds.
+	// This requires two linked bridges to avoid conflicts with OVN flows.
+	// +kubebuilder:default=Disabled
+	// +kubebuilder:validation:Enum=Disabled;Default;BalanceSLB
+	// +optional
+	BridgeTopology BridgeTopologyMode `json:"bridgeTopology,omitempty"`
 
 	// cpuPartitioning expresses if CPU partitioning is a currently enabled feature in the cluster.
 	// CPU Partitioning means that this cluster can support partitioning workloads to specific CPU Sets.
@@ -159,6 +169,19 @@ const (
 	// that any of the control plane components such as kubernetes API server or etcd are visible within
 	// the cluster.
 	ExternalTopologyMode TopologyMode = "External"
+)
+
+type BridgeTopologyMode string
+
+const(
+	// "Disabled"
+	DisabledBridgeTopologyMode BridgeTopologyMode = "Disabled"
+
+	// "Default"
+	DefaultBridgeTopologyMode BridgeTopologyMode = "Default"
+
+	// "BalanceSLB"
+	BalanceSLBBridgeTopologyMode BridgeTopologyMode = "BalanceSLB"
 )
 
 // CPUPartitioningMode defines the mode for CPU partitioning
@@ -787,7 +810,6 @@ type GCPPlatformStatus struct {
 	//
 	// +default={"dnsType": "PlatformDefault"}
 	// +kubebuilder:default={"dnsType": "PlatformDefault"}
-	// +openshift:enable:FeatureGate=GCPClusterHostedDNSInstall
 	// +optional
 	// +nullable
 	CloudLoadBalancerConfig *CloudLoadBalancerConfig `json:"cloudLoadBalancerConfig,omitempty"`

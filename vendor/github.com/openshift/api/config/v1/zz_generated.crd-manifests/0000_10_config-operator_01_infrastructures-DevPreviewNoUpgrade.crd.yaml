@@ -1118,6 +1118,19 @@ spec:
                   optionally a port (defaulting to 443).  apiServerURL can be used by components like the web console
                   to tell users where to find the Kubernetes API.
                 type: string
+              bridgeTopology:
+                default: Disabled
+                description: |-
+                  bridgeTopology specifies how the br-ex bridge for OVNKubernetes will be created by NMState.
+                  The default is 'Disabled' which means br-ex will be managed by configure-ovs.sh instead of NMState
+                  'Default' will create a standard br-ex, similar to what would be done by configure-ovs.sh.
+                  'BalanceSLB' will create a br-ex configured to use the SLB mode in OpenVSwitch bonds.
+                  This requires two linked bridges to avoid conflicts with OVN flows.
+                enum:
+                - Disabled
+                - Default
+                - BalanceSLB
+                type: string
               controlPlaneTopology:
                 default: HighlyAvailable
                 description: |-
@@ -1127,6 +1140,8 @@ spec:
                   and the operators should not configure the operand for highly-available operation
                   The 'External' mode indicates that the control plane is hosted externally to the cluster and that
                   its components are not visible within the cluster.
+                  The 'HighlyAvailableArbiter' mode indicates that the control plane will consist of 2 control-plane nodes
+                  that run conventional services and 1 smaller sized arbiter node that runs a bare minimum of services to maintain quorum.
                 enum:
                 - HighlyAvailable
                 - HighlyAvailableArbiter
