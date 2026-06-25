@@ -48,5 +48,3 @@ contents:
 
     cp "$src_path/$config_file" /etc/nmstate
     cp "$src_path/$config_file" "$src_path/applied"
-
-    sleep 1200
